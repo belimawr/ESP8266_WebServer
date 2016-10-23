@@ -25,10 +25,10 @@ class HTTPServer:
 
         while True:
             cl, addr = self._socket.accept()
-            cl_file = cl.makefile('rwb', addr)
+            cl_file = cl.makefile('rwb')
             status = 200
             try:
-                self.parse_request(cl_file)
+                self._parse_request(cl_file)
             except Exception as e:
                 status = 500
                 print('Internal server error:', e)
@@ -36,7 +36,7 @@ class HTTPServer:
             cl.send(response)
             cl.close()
 
-    def parse_request(self, cl_file):
+    def _parse_request(self, cl_file):
         request = Request()
 
         # Reads the first line
@@ -48,26 +48,7 @@ class HTTPServer:
         request.method = split_line[0]
         request.path = split_line[1]
 
-        # Parse the other lines
-        # Those are the HEADER lines
-        while True:
-            line = cl_file.readline()
-            line = line.decode('utf8')
-
-            # This is a blank line, so the headers ended
-            # and the body starts now
-            if line == '\r\n' or line == '\n':
-                break
-
-            # Actually parse the header line
-            try:
-                split_line = line.split(':')
-                k = split_line[0].rstrip().lstrip()
-                v = split_line[1].rstrip().lstrip()
-                request.headers[k] = v
-            except Exception:
-                print('Error parsing "%s"' % line)
-
+        self._parse_headers(request, cl_file)
         # Parse the Body, if there is any
         if request.headers.get('Content-Length'):
             request.body = cl_file.read(int(request.headers.get('Content-Length')))
@@ -78,4 +59,25 @@ class HTTPServer:
         print(request.body)
         print('***********************************')
         print('Waiting for another request...')
+
+    def _parse_headers(self, request, cl_file):
+        while True:
+            line = cl_file.readline()
+            line = line.decode('utf8')
+
+            # If line is a blank line, the headers ended
+            # and ther might be a body
+            if line == '\r\n' or line == '\n':
+                break
+
+            # Actually parse the header line
+            # On the format:
+            # Header_name: Header_value
+            try:
+                split_line = line.split(':')
+                k = split_line[0].rstrip().lstrip()
+                v = split_line[1].rstrip().lstrip()
+                request.headers[k] = v
+            except Exception:
+                print('Error parsing "%s"' % line)
 
