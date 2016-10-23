@@ -49,9 +49,7 @@ class HTTPServer:
         request.path = split_line[1]
 
         self._parse_headers(request, cl_file)
-        # Parse the Body, if there is any
-        if request.headers.get('Content-Length'):
-            request.body = cl_file.read(int(request.headers.get('Content-Length')))
+        self._parse_body(request, cl_file)
         print('***********************************')
         print(request.method.upper())
         print(request.path)
@@ -81,3 +79,8 @@ class HTTPServer:
             except Exception:
                 print('Error parsing "%s"' % line)
 
+
+    def _parse_body(self, request, cl_file):
+        if request.headers.get('Content-Length'):
+            length = int(request.headers.get('Content-Length'))
+            request.body = cl_file.read(length)
