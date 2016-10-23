@@ -3,6 +3,18 @@ ESP8266 WebServer
 
 The aim of this project is to build a simple web server to use with the ESP8266/upython
 
+This is a *Work in Progress*! It is far from ready.
+
+Status
+--------
+* Parsing requests
+
+TODO
+----
+* Parse query strings
+* Route requests to methods
+* .... many cool things.... the Sky is the limit :P
+
 LICENCE
 -------
 *GPLV3*
