@@ -13,7 +13,7 @@ class Request:
 class HTTPServer:
     def __init__(self, port=None, timeout=None):
         self._port = port or 80
-        self._timeout = timeout or 100
+        self._timeout = timeout
         self._addr = '0.0.0.0'
         self._socket = socket.socket()
         self._current_request = None
