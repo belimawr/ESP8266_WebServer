@@ -2,6 +2,7 @@ import socket
 
 __version__ = '0.1'
 
+
 class Request:
     def __init__(self):
         self.path = ''
@@ -11,17 +12,19 @@ class Request:
 
 
 class HTTPServer:
-    def __init__(self, port=None, timeout=None):
+    def __init__(self, port=None, timeout=None, debug=False):
         self._port = port or 80
         self._timeout = timeout
         self._addr = '0.0.0.0'
         self._socket = socket.socket()
         self._current_request = None
+        self._DEBUG = debug
 
     def start_web_server(self):
         self._socket.bind((self._addr, self._port))
         self._socket.settimeout(self._timeout)
         self._socket.listen(1)
+        self._debug('Listening for requests on port:', self._port)
 
         while True:
             cl, addr = self._socket.accept()
@@ -50,13 +53,13 @@ class HTTPServer:
 
         self._parse_headers(request, cl_file)
         self._parse_body(request, cl_file)
-        print('***********************************')
-        print(request.method.upper())
-        print(request.path)
-        print(request.headers)
-        print(request.body)
-        print('***********************************')
-        print('Waiting for another request...')
+        self._debug('***********************************')
+        self._debug(request.method.upper())
+        self._debug(request.path)
+        self._debug(request.headers)
+        self._debug(request.body)
+        self._debug('***********************************')
+        self._debug('Waiting for another request...')
 
     def _parse_headers(self, request, cl_file):
         while True:
@@ -84,3 +87,7 @@ class HTTPServer:
         if request.headers.get('Content-Length'):
             length = int(request.headers.get('Content-Length'))
             request.body = cl_file.read(length)
+
+    def _debug(self, *args, **kwargs):
+        if self._DEBUG:
+            print(*args, **kwargs)
