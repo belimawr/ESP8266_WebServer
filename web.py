@@ -1,6 +1,6 @@
 import socket
 
-__version__ = '0.1'
+__version__ = '0.5'
 
 
 class Request:
@@ -17,7 +17,6 @@ class HTTPServer:
         self._timeout = timeout
         self._addr = '0.0.0.0'
         self._socket = socket.socket()
-        self._current_request = None
         self._DEBUG = debug
 
     def serve_forever(self):
@@ -51,17 +50,18 @@ class HTTPServer:
     def _parse_request(self, cl_file):
         request = Request()
 
-        # Reads the first line
+        # Read the first line
         line = cl_file.readline()
         line = line.decode('utf8')
 
-        # Parse the line and get the method and path
+        # Parse the line and get method and path
         split_line = line.split(' ')
         request.method = split_line[0]
         request.path = split_line[1]
 
         self._parse_headers(request, cl_file)
         self._parse_body(request, cl_file)
+
         self._debug('***********************************')
         self._debug(request.method.upper())
         self._debug(request.path)
@@ -76,13 +76,12 @@ class HTTPServer:
             line = line.decode('utf8')
 
             # If line is a blank line, the headers ended
-            # and ther might be a body
             if line == '\r\n' or line == '\n':
                 break
 
             # Actually parse the header line
-            # On the format:
-            # Header_name: Header_value
+            # The format is:
+            # <header name>: <header value>
             try:
                 split_line = line.split(':')
                 k = split_line[0].rstrip().lstrip()
@@ -90,7 +89,6 @@ class HTTPServer:
                 request.headers[k] = v
             except Exception:
                 print('Error parsing "%s"' % line)
-
 
     def _parse_body(self, request, cl_file):
         if request.headers.get('Content-Length'):
