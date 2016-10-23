@@ -3,7 +3,7 @@ ESP8266 WebServer
 
 The aim of this project is to build a simple web server to use with the ESP8266/upython
 
-This is a *Work in Progress*! It is far from ready.
+This is a **Work in Progress**! It is far from ready.
 
 Status
 --------
@@ -17,7 +17,7 @@ TODO
 
 LICENCE
 -------
-*GPLV3*
+**GPLV3**
 
 This program is free software: you can redistribute it and/or modify
 it under the terms of the GNU General Public License as published by
