@@ -1,7 +1,7 @@
 ESP8266 WebServer
 =================
 
-The aim of this project is to build a simple web server to use with the ESP8266/upython
+The aim of this project is to build a simple web server to use with the [ESP8266](http://docs.micropython.org/en/latest/esp8266/esp8266/tutorial/index.html)/[micropython](https://micropython.org/)
 
 This is a **Work in Progress**! It is far from ready.
 
