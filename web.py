@@ -25,8 +25,9 @@ class HTTPServer:
             self._start_web_server()
         except KeyboardInterrupt:
             self._debug('Closing socket...')
-            self._debug('Good Bye ;)')
             self._socket.close()
+            self.__init__(self._port, self._timeout, self._debug)
+            self._debug('Good Bye ;)')
 
     def _start_web_server(self):
         self._socket.bind((self._addr, self._port))
