@@ -59,12 +59,14 @@ class HTTPServer:
         request.method = split_line[0]
         request.path = split_line[1]
 
+        self._parse_query_string(request)
         self._parse_headers(request, cl_file)
         self._parse_body(request, cl_file)
 
         self._debug('***********************************')
         self._debug(request.method.upper())
         self._debug(request.path)
+        self._debug(request.querystring)
         self._debug(request.headers)
         self._debug(request.body)
         self._debug('***********************************')
@@ -94,6 +96,16 @@ class HTTPServer:
         if request.headers.get('Content-Length'):
             length = int(request.headers.get('Content-Length'))
             request.body = cl_file.read(length)
+
+    def _parse_query_string(self, request):
+        if '?' in request.path:
+            path, qs = request.path.split('?')
+            qs_dict = {}
+            for pair in qs.split('&'):
+                k, v = pair.split('=')
+                qs_dict[k] = v
+            request.querystring = qs_dict
+            request.path = path
 
     def _debug(self, *args, **kwargs):
         if self._DEBUG:
