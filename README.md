@@ -11,7 +11,7 @@ Status
 
 TODO
 ----
-* Parse query strings
+* Handle duplicated querystring keys
 * Route requests to methods
 * .... many cool things.... the Sky is the limit :P
 
