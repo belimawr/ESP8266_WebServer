@@ -9,6 +9,7 @@ class Request:
         self.method = ''
         self.body = None
         self.headers = {}
+        self.querystring = {}
 
 
 class HTTPServer:
@@ -43,8 +44,8 @@ class HTTPServer:
             except Exception as e:
                 status = 500
                 print('Internal server error:', e)
-            response = 'HTTP/1.0 %s' % status
-            cl.send(response)
+            response = 'HTTP/1.0 %s\n' % status
+            cl.send(bytes(response, 'UTF-8'))
             cl.close()
 
     def _parse_request(self, cl_file):
