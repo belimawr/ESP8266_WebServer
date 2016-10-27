@@ -44,8 +44,9 @@ class HTTPServer:
             except Exception as e:
                 status = 500
                 print('Internal server error:', e)
-            response = 'HTTP/1.0 %s\n' % status
+            response = 'HTTP/1.0 %s\n\n' % status
             cl.send(bytes(response, 'UTF-8'))
+            cl_file.close()
             cl.close()
 
     def _parse_request(self, cl_file):
@@ -104,7 +105,14 @@ class HTTPServer:
             qs_dict = {}
             for pair in qs.split('&'):
                 k, v = pair.split('=')
-                qs_dict[k] = v
+                if k in qs_dict:
+                    if isinstance(qs_dict[k], list):
+                        qs_dict[k].append(v)
+                    else:
+                        qs_dict[k] = [qs_dict[k]]
+                        qs_dict[k].append(v)
+                else:
+                    qs_dict[k] = v
             request.querystring = qs_dict
             request.path = path
 
