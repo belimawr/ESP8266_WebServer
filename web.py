@@ -13,10 +13,10 @@ class Request:
 
 
 class HTTPServer:
-    def __init__(self, address= '0.0.0.0', port=80, timeout=0, debug=False):
+    def __init__(self, address= '0.0.0.0', port=80, timeout=None, debug=False):
         self._port = port
         self._timeout = timeout
-        self._addr = addr
+        self._addr = address
         self._socket = socket.socket()
         self._DEBUG = debug
 
