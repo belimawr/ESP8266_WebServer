@@ -17,8 +17,8 @@ class HTTPServer:
         self._port = port
         self._timeout = timeout
         self._addr = address
-        self._socket = socket.socket()
         self._DEBUG = debug
+        self._socket = None
 
     def serve_forever(self):
         try:
@@ -26,10 +26,10 @@ class HTTPServer:
         except KeyboardInterrupt:
             self._debug('Closing socket...')
             self._socket.close()
-            self.__init__(self._port, self._timeout, self._debug)
             self._debug('Good Bye ;)')
 
     def _start_web_server(self):
+        self._socket = socket.socket()
         self._socket.bind((self._addr, self._port))
         self._socket.settimeout(self._timeout)
         self._socket.listen(1)
